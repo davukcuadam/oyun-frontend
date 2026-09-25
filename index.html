@@ -1,39 +1,245 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Oyun Platformu</title>
-  <link rel="stylesheet" href="style.css">
-  <!-- İkonlar için FontAwesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <!-- Mobil cihazlarda uygulamanın yerel bir uygulama gibi davranmasını sağlar -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#050505">
+    <title>ArcadeTok - Yeni Nesil Oyun Platformu</title>
+    
+    <!-- Modern Fontlar (Poppins) ve İkonlar (FontAwesome 6) -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Ana Stil Dosyamız -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  
-  <!-- Oyunların Kayacağı Ana Ekran -->
-  <div id="feed-container">
-    <!-- Oyunlar buraya JS ile yüklenecek -->
-  </div>
 
-  <!-- Alt Menü (Oyun Üretme Butonu) -->
-  <div class="bottom-nav">
-    <button id="create-btn" onclick="toggleModal()"><i class="fa-solid fa-plus"></i></button>
-  </div>
-
-  <!-- Oyun Yaratma Menüsü (Gizli) -->
-  <div id="create-modal" class="modal hidden">
-    <div class="modal-content">
-      <span class="close" onclick="toggleModal()">&times;</span>
-      <h2>Yeni Oyun Yayınla</h2>
-      <input type="text" id="g-title" placeholder="Oyunun Adı" required>
-      <input type="text" id="g-author" placeholder="Kullanıcı Adın" required>
-      <textarea id="g-html" placeholder="HTML Kodları (örn: <button>Tıkla</button>)"></textarea>
-      <textarea id="g-css" placeholder="CSS Kodları (örn: button { color: red; })"></textarea>
-      <textarea id="g-js" placeholder="JavaScript Kodları (örn: alert('Merhaba!'))"></textarea>
-      <button onclick="publishGame()" id="publish-btn">🚀 Yayınla</button>
+    <!-- Yüklenme Ekranı (Splash Screen) -->
+    <div id="splash-screen">
+        <div class="loader-logo">
+            <i class="fa-solid fa-gamepad"></i>
+            <h1>ARCADE<span>TOK</span></h1>
+        </div>
+        <div class="loader-spinner"></div>
     </div>
-  </div>
 
-  <script src="app.js"></script>
+    <!-- ANA UYGULAMA KAPSAYICISI -->
+    <div id="app-container" class="hidden">
+
+        <!-- Üst Menü (Glassmorphism Header) -->
+        <header class="app-header">
+            <div class="header-logo">ARCADE<span>TOK</span></div>
+            <div class="header-actions">
+                <button id="notification-btn" class="icon-btn"><i class="fa-regular fa-bell"></i></button>
+                <div id="header-profile-pic" class="avatar-small" onclick="openAuthModal()">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+            </div>
+        </header>
+
+        <!-- ========================================== -->
+        <!-- 1. AKIŞ EKRANI (TikTok Benzeri Ana Sayfa) -->
+        <!-- ========================================== -->
+        <main id="view-feed" class="app-view active">
+            <div id="feed-scroll-container">
+                <!-- Oyun kartları buraya JS ile yüklenecek -->
+            </div>
+        </main>
+
+        <!-- ========================================== -->
+        <!-- 2. KEŞFET EKRANI (Trendler ve Arama) -->
+        <!-- ========================================== -->
+        <main id="view-discover" class="app-view hidden">
+            <div class="discover-wrapper">
+                <div class="search-bar">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" placeholder="Oyun veya yaratıcı ara...">
+                </div>
+                
+                <h3 class="section-title">🔥 Trend Kategoriler</h3>
+                <div class="category-tags">
+                    <span class="tag active">Tümü</span>
+                    <span class="tag">Arcade</span>
+                    <span class="tag">Bulmaca</span>
+                    <span class="tag">Aksiyon</span>
+                    <span class="tag">Tıklama</span>
+                </div>
+
+                <h3 class="section-title">Haftanın En İyileri</h3>
+                <div id="discover-grid" class="masonry-grid">
+                    <!-- Keşfet kartları JS ile eklenecek -->
+                </div>
+            </div>
+        </main>
+
+        <!-- ========================================== -->
+        <!-- 3. OYUN YARATMA STÜDYOSU (Gelişmiş Editör) -->
+        <!-- ========================================== -->
+        <main id="view-create" class="app-view hidden">
+            <div class="studio-wrapper">
+                <div class="studio-header">
+                    <h2>🎮 Yeni Oyun Stüdyosu</h2>
+                    <p>Kodlarını yaz, anında milyarlara ulaştır.</p>
+                </div>
+
+                <div class="input-group">
+                    <label>Oyun Adı</label>
+                    <input type="text" id="game-title" placeholder="Efsane Oyunum" autocomplete="off">
+                </div>
+
+                <!-- Profesyonel Sekmeli Kod Editörü -->
+                <div class="code-editor-container">
+                    <div class="editor-tabs">
+                        <button class="tab-btn active" onclick="switchCodeTab('html')"><i class="fa-brands fa-html5"></i> HTML</button>
+                        <button class="tab-btn" onclick="switchCodeTab('css')"><i class="fa-brands fa-css3-alt"></i> CSS</button>
+                        <button class="tab-btn" onclick="switchCodeTab('js')"><i class="fa-brands fa-js"></i> JS</button>
+                    </div>
+                    
+                    <div class="editor-body">
+                        <textarea id="code-html" class="code-area" placeholder="<!-- Oyununun iskeletini buraya yaz -->"></textarea>
+                        <textarea id="code-css" class="code-area hidden" placeholder="/* Tasarımını ve renklerini buraya ekle */"></textarea>
+                        <textarea id="code-js" class="code-area hidden" placeholder="// Oyun motorunu ve mantığını buraya yaz"></textarea>
+                    </div>
+                </div>
+
+                <button id="publish-game-btn" onclick="publishGame()">
+                    <i class="fa-solid fa-rocket"></i> Canlıya Al ve Yayınla
+                </button>
+            </div>
+        </main>
+
+        <!-- ========================================== -->
+        <!-- 4. PROFİL EKRANI -->
+        <!-- ========================================== -->
+        <main id="view-profile" class="app-view hidden">
+            <div class="profile-wrapper">
+                <!-- Profil Üst Bilgileri -->
+                <div class="profile-header-card">
+                    <div class="profile-avatar">
+                        <i class="fa-solid fa-user-astronaut"></i>
+                    </div>
+                    <h2 id="profile-username">Misafir Kullanıcı</h2>
+                    <p id="profile-bio" class="bio">Oyun oynamak ve yaratmak için giriş yap.</p>
+                    
+                    <div class="profile-stats">
+                        <div class="stat-box">
+                            <span id="stat-following" class="stat-num">0</span>
+                            <span class="stat-label">Takip</span>
+                        </div>
+                        <div class="stat-box">
+                            <span id="stat-followers" class="stat-num">0</span>
+                            <span class="stat-label">Takipçi</span>
+                        </div>
+                        <div class="stat-box">
+                            <span id="stat-likes" class="stat-num">0</span>
+                            <span class="stat-label">Beğeni</span>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-actions">
+                        <button id="profile-login-btn" class="primary-btn" onclick="openAuthModal()">Giriş Yap / Kayıt Ol</button>
+                        <button id="profile-logout-btn" class="secondary-btn hidden" onclick="logout()">Çıkış Yap</button>
+                    </div>
+                </div>
+
+                <!-- Profil Oyunları Grid -->
+                <div class="profile-tabs">
+                    <div class="p-tab active"><i class="fa-solid fa-gamepad"></i> Oyunlarım</div>
+                    <div class="p-tab"><i class="fa-solid fa-heart"></i> Beğendiklerim</div>
+                </div>
+                
+                <div id="profile-games-grid" class="masonry-grid">
+                    <!-- Kullanıcının oyunları buraya gelecek -->
+                </div>
+            </div>
+        </main>
+
+        <!-- ========================================== -->
+        <!-- ALT NAVİGASYON ÇUBUĞU (Bottom Bar) -->
+        <!-- ========================================== -->
+        <nav class="bottom-navigation">
+            <button class="nav-item active" onclick="switchView('feed', this)">
+                <i class="fa-solid fa-house"></i>
+                <span>Ana Sayfa</span>
+            </button>
+            <button class="nav-item" onclick="switchView('discover', this)">
+                <i class="fa-solid fa-compass"></i>
+                <span>Keşfet</span>
+            </button>
+            
+            <!-- Özel Yaratma Butonu (Ortada, Vurgulu) -->
+            <div class="nav-item create-wrapper" onclick="switchView('create', this)">
+                <div class="create-btn">
+                    <i class="fa-solid fa-plus"></i>
+                </div>
+            </div>
+            
+            <button class="nav-item" onclick="switchView('inbox', this)">
+                <i class="fa-solid fa-message"></i>
+                <span>Gelen Kutusu</span>
+            </button>
+            <button class="nav-item" onclick="switchView('profile', this)">
+                <i class="fa-regular fa-user"></i>
+                <span>Profil</span>
+            </button>
+        </nav>
+
+    </div> <!-- UYGULAMA KAPSAYICISI BİTİŞİ -->
+
+    <!-- ========================================== -->
+    <!-- MODALLAR (Açılır Pencereler) -->
+    <!-- ========================================== -->
+    
+    <!-- Giriş / Kayıt Modalı (Glassmorphism) -->
+    <div id="auth-modal" class="modal-overlay hidden">
+        <div class="modal-content glass-card">
+            <button class="close-modal-btn" onclick="closeAuthModal()"><i class="fa-solid fa-xmark"></i></button>
+            
+            <div class="auth-header">
+                <i class="fa-solid fa-gamepad auth-icon"></i>
+                <h2 id="auth-title">ArcadeTok'a Katıl</h2>
+                <p id="auth-subtitle">Devam etmek için giriş yapmalısın.</p>
+            </div>
+
+            <div class="auth-form">
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-at"></i>
+                    <input type="text" id="auth-username" placeholder="Kullanıcı Adı" autocomplete="off">
+                </div>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" id="auth-password" placeholder="Şifre">
+                </div>
+                <button id="auth-submit-btn" class="primary-btn pulse-anim" onclick="handleAuth()">Giriş Yap</button>
+            </div>
+
+            <div class="auth-footer">
+                <p id="auth-switch-text">Hesabın yok mu? <span onclick="toggleAuthMode()">Hemen Kayıt Ol</span></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Yorumlar Modalı (Aşağıdan Yukarı Kayarak Gelen - Bottom Sheet) -->
+    <div id="comments-modal" class="bottom-sheet hidden">
+        <div class="sheet-content">
+            <div class="sheet-header">
+                <h3>Yorumlar (128)</h3>
+                <button onclick="closeComments()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="sheet-body">
+                <!-- Yorumlar buraya eklenecek -->
+                <p style="text-align: center; color: #888; margin-top: 20px;">Yorumlar yükleniyor...</p>
+            </div>
+            <div class="sheet-footer">
+                <input type="text" placeholder="Güzel bir yorum ekle...">
+                <button><i class="fa-solid fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sistemin çalışması için gerekli JS dosyası -->
+    <script src="app.js"></script>
 </body>
 </html>
