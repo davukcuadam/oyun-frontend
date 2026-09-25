@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Oyun Platformu</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- İkonlar için FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  
+  <!-- Oyunların Kayacağı Ana Ekran -->
+  <div id="feed-container">
+    <!-- Oyunlar buraya JS ile yüklenecek -->
+  </div>
+
+  <!-- Alt Menü (Oyun Üretme Butonu) -->
+  <div class="bottom-nav">
+    <button id="create-btn" onclick="toggleModal()"><i class="fa-solid fa-plus"></i></button>
+  </div>
+
+  <!-- Oyun Yaratma Menüsü (Gizli) -->
+  <div id="create-modal" class="modal hidden">
+    <div class="modal-content">
+      <span class="close" onclick="toggleModal()">&times;</span>
+      <h2>Yeni Oyun Yayınla</h2>
+      <input type="text" id="g-title" placeholder="Oyunun Adı" required>
+      <input type="text" id="g-author" placeholder="Kullanıcı Adın" required>
+      <textarea id="g-html" placeholder="HTML Kodları (örn: <button>Tıkla</button>)"></textarea>
+      <textarea id="g-css" placeholder="CSS Kodları (örn: button { color: red; })"></textarea>
+      <textarea id="g-js" placeholder="JavaScript Kodları (örn: alert('Merhaba!'))"></textarea>
+      <button onclick="publishGame()" id="publish-btn">🚀 Yayınla</button>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
